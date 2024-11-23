@@ -15,7 +15,10 @@ int getmv(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin) {
 	int choice = wgetch(myPlayer->currWindow);
 	static time_t lastShotTime = 0;
 	time_t currentTime = time(NULL);
-	
+
+	if (choice != ' ' && choice != 'x')
+        mvwaddch(playwin, myPlayer->yLoc, myPlayer->xLoc, ' ');
+
 	switch (choice) {
 		case (int)'w':
 			mvup(myPlayer);
@@ -47,9 +50,7 @@ int getmv(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin) {
 
 /*Print player function*/
 void display(Player *myPlayer) {
-    werase(myPlayer->currWindow);
     box(myPlayer->currWindow, 0, 0);
     mvwaddch(myPlayer->currWindow, myPlayer->yLoc, myPlayer->xLoc, myPlayer->character);
-    wrefresh(myPlayer->currWindow); 
 }
 

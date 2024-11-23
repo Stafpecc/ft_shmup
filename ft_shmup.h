@@ -28,9 +28,8 @@ void shoot(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin);
 
 /*Enemy function*/
 void shootEnemy(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin);
-void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin);
-void enemy(WINDOW *playwin, int xMax, int yMax);
-void *enemyThread(void *arg);
-void *moveEnemyThread(void *arg);
+void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin, clock_t *lastShotTime);
+void moveEnemy(Player *enemy, int xMax, int yMax, WINDOW *playwin);
+void displayEnemy(Player *myEnemy, WINDOW *playwin);
 
 #endif
