@@ -12,7 +12,6 @@ typedef struct Player {
     int yMax;
     char character;
     WINDOW* currWindow;
-    int lastShotTime;
 }	Player;
 
 /*Player function*/

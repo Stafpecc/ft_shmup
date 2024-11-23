@@ -1,5 +1,6 @@
 {
 	"files.associations": {
-		"ft_shmup.h": "c"
+		"ft_shmup.h": "c",
+		"stdint.h": "c"
 	}
 }

@@ -6,6 +6,7 @@
 int main(void) {    
     initscr();
     raw();
+    curs_set(0);
     timeout(100);
     noecho();
     cbreak();
@@ -22,17 +23,19 @@ int main(void) {
     wrefresh(playwin);
 
     struct Player p = newplayer(10, 10, xMax, yMax, '@', playwin);
-    pthread_t enemy_thread;
-    pthread_create(&enemy_thread, NULL, (void *)enemy, (void *)playwin);
+    display(&p);
+    wrefresh(playwin);
+
+    enemy(playwin, xMax, yMax);
 
     while (1) {
         int ch = getmv(&p, xMax, yMax, '|', playwin);
         if (ch == 'x')
             break;
         display(&p);
+        enemy(playwin, xMax, yMax);
         wrefresh(playwin);
     }  
-    pthread_cancel(enemy_thread);
     getch();
     endwin();
     

@@ -3,22 +3,22 @@
 
 /*Movement function*/
 void mvup(Player *myPlayer) {
-	if (myPlayer->yLoc > 0)
+	if (myPlayer->yLoc > 1)
 		myPlayer->yLoc--;
 }
 
 void mvdown(Player *myPlayer) {
-	if (myPlayer->yLoc < myPlayer->yMax - 1)
+	if (myPlayer->yLoc < myPlayer->yMax - 2)
 		myPlayer->yLoc++;
 }
 
 void mvleft(Player *myPlayer) {
-	if (myPlayer->xLoc > 0)
+	if (myPlayer->xLoc > 1)
 		myPlayer->xLoc--;
 }
 
 void mvright(Player *myPlayer) {
-	if (myPlayer->xLoc < myPlayer->xMax - 1)
+	if (myPlayer->xLoc < myPlayer->xMax - 2)
 		myPlayer->xLoc++;
 }
 
