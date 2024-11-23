@@ -6,7 +6,7 @@
 
 #define MAX_ENEMIES 5
 #define MIN_TIR_INTERVAL 142
-#define MAX_TIR_INTERVAL 1000
+#define MAX_TIR_INTERVAL 1042
 
 /*Shoot enemy function*/
 void shootEnemy(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin) {
@@ -20,6 +20,40 @@ void shootEnemy(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin) {
     }
 }
 
+/*Shoot randomly function*/
+void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin) {
+    int delay = rand() % MAX_TIR_INTERVAL + MIN_TIR_INTERVAL;
+    napms(delay);
+    shootEnemy(enemy, xMax, yMax, c, playwin);
+}
+
+
+/*Movement enemy function*/
+void *moveEnemyThread(void *arg) {
+    Player *enemy = (Player *)arg;
+    int xMax = enemy->xMax;
+
+    while (1) {
+        int direction = (rand() % 2 == 0) ? -1 : 1;
+        int newX = enemy->xLoc + direction;
+
+        if (newX >= (enemy->xLoc - 3) && newX <= (enemy->xLoc + 3) && newX > 0 && newX < xMax - 1) {
+            enemy->xLoc = newX;
+        }
+
+        usleep(200000);
+    }
+
+    return NULL;
+}
+
+
+/*Enemy function*/
+void enemy(WINDOW *playwin, int xMax, int yMax) {
+	mvwaddch(playwin, 5, 25, 'Y');
+    wrefresh(playwin);
+}
+
 void *enemyThread(void *arg) {
     Player *enemy = (Player *)arg;
     int xMax = enemy->xMax;
@@ -28,25 +62,9 @@ void *enemyThread(void *arg) {
 
     while (1) {
         enemyShootRandomly(enemy, xMax, yMax, '|', playwin);
-    }
+        moveEnemyThread(arg);
+        wrefresh(playwin);
+        usleep(100000);
+	}
     return NULL;
 }
-
-/*Shoot randomly function*/
-void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin) {
-    int delay = rand() % MAX_TIR_INTERVAL + MIN_TIR_INTERVAL;
-    napms(delay);
-    shootEnemy(enemy, xMax, yMax, c, playwin);
-}
-
-/*Movement enemy function*/
-void moveEnemy(Player *enemy, int xMax) {
-
-}
-
-/*Enemy function*/
-void enemy(WINDOW *playwin, int xMax, int yMax) {
-	mvwaddch(playwin, 5, 25, 'Y');
-    wrefresh(playwin);
-}
-

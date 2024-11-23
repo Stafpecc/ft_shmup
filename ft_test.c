@@ -2,53 +2,9 @@
 #include <pthread.h>
 #include <ncurses.h>
 #include <stdlib.h>
+#include <unistd.h>
 
-/*
-int main(void) {
-    srand(time(NULL));
-    initscr();
-    raw();
-    curs_set(0);
-    timeout(100);
-    noecho();
-    cbreak();
-
-    int yMax, xMax;
-    getmaxyx(stdscr, yMax, xMax);
-    if (xMax == 0 || yMax == 0) {
-        endwin();
-        exit(1);
-    }
-
-    WINDOW *playwin = newwin(20, 50, (yMax / 2) - 10, 10);
-    box(playwin, 0, 0);
-    wrefresh(playwin);
-
-    struct Player p = newplayer(10, 10, xMax, yMax, '@', playwin);
-    display(&p);
-    wrefresh(playwin);
-
-    struct Player enemyPlayer = newplayer(20, 5, xMax, yMax, 'Y', playwin);
-
-    pthread_t enemy_thread;
-    pthread_create(&enemy_thread, NULL, enemyThread, &enemyPlayer);
-
-    while (1) {
-        int ch = getmv(&p, xMax, yMax, '|', playwin);
-        display(&p);
-        enemy(playwin, xMax, yMax);
-        wrefresh(playwin);
-    }
-
-    pthread_join(enemy_thread, NULL);
-
-    getch();
-    endwin();
-
-    return 0;
-}
-*/
-#define NUM_ENEMIES 3
+#define NUM_ENEMIES 5
 
 int main(void) {
     srand(time(NULL));
@@ -82,11 +38,12 @@ int main(void) {
         display(&p);
 
         for (int i = 0; i < NUM_ENEMIES; i++) {
-            moveEnemy(&enemies[i], xMax);
             display(&enemies[i]);
         }
 
         wrefresh(playwin);
+
+        usleep(50000);
     }
 
     for (int i = 0; i < NUM_ENEMIES; i++) {
@@ -96,3 +53,4 @@ int main(void) {
     endwin();
     return 0;
 }
+

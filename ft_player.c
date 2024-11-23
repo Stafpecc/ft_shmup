@@ -47,8 +47,9 @@ int getmv(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin) {
 
 /*Print player function*/
 void display(Player *myPlayer) {
-	werase(myPlayer->currWindow);
-	box(myPlayer->currWindow, 0, 0);
-	mvwaddch(myPlayer->currWindow, myPlayer->yLoc, myPlayer->xLoc, myPlayer->character);
-	wrefresh(myPlayer->currWindow);
+    werase(myPlayer->currWindow);
+    box(myPlayer->currWindow, 0, 0);
+    mvwaddch(myPlayer->currWindow, myPlayer->yLoc, myPlayer->xLoc, myPlayer->character);
+    wrefresh(myPlayer->currWindow); 
 }
+
