@@ -4,7 +4,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define NUM_ENEMIES 5
+#define NUM_ENEMIES 20
 #define MAX_TIR_INTERVAL 1042
 #define MIN_TIR_INTERVAL 142
 
@@ -21,25 +21,24 @@ void shootEnemy(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin) {
 
 void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin, clock_t *lastShotTime) {
     clock_t currentTime = clock();
-    if (((double)(currentTime - *lastShotTime) / CLOCKS_PER_SEC) < 1)
+    double timeElapsed = (double)(currentTime - *lastShotTime) / CLOCKS_PER_SEC;
+    if (timeElapsed < (rand() % (MAX_TIR_INTERVAL - MIN_TIR_INTERVAL) + MIN_TIR_INTERVAL) / 1000.0)
         return;
     *lastShotTime = currentTime;
-    int shotX = rand() % xMax; 
-    Player s = newplayer(shotX, enemy->yLoc + 1, xMax, yMax, c, playwin);
-    while (s.yLoc < yMax) {
-        mvwaddch(playwin, s.yLoc, s.xLoc, s.character);
+    Player shot = newplayer(rand() % xMax, enemy->yLoc + 1, xMax, yMax, c, playwin);
+    while (shot.yLoc < yMax) {
+        mvwaddch(playwin, shot.yLoc, shot.xLoc, shot.character);
         wrefresh(playwin);
         napms(50);
-        mvwaddch(playwin, s.yLoc, s.xLoc, ' ');
-        s.yLoc++;
+        mvwaddch(playwin, shot.yLoc, shot.xLoc, ' ');
+        shot.yLoc++;
     }
 }
-
 void moveEnemy(Player *enemy, int xMax, int yMax, WINDOW *playwin) {
     mvwaddch(playwin, enemy->yLoc, enemy->xLoc, ' ');
-    int direction = (rand() % 2 == 0) ? -1 : 1;
+    int direction = (rand() % 2 == 0) ? -2 : 2;
     int newX = enemy->xLoc + direction;
-    if (newX >= enemy->xLoc - 3 && newX <= enemy->xLoc + 3 && newX > 0 && newX < xMax - 1) {
+    if (newX >= enemy->xLoc - 20 && newX <= enemy->xLoc + 20 && newX > 0 && newX < xMax - 1) {
         enemy->xLoc = newX;
     }
     mvwaddch(playwin, enemy->yLoc, enemy->xLoc, enemy->character);

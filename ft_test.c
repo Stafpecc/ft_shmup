@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 
-#define NUM_ENEMIES 5
+#define NUM_ENEMIES 20
 
 void	start_display(WINDOW *playwin, int yMax, int xMax);
 
@@ -28,7 +28,6 @@ int main(void) {
     WINDOW *win = newwin((yMax - 10), (xMax - 10), 5, 5);
     start_color();
     assume_default_colors(COLOR_RED, COLOR_BLACK);
-
     wborder(win, '{', '}', '*', '*', '#', '#', '#', '#');
     refresh();
     wrefresh(win);
@@ -46,7 +45,6 @@ int main(void) {
     display(&p);
     wrefresh(playwin);
 
-
     Player enemies[NUM_ENEMIES];
     clock_t lastEnemyShotTimes[NUM_ENEMIES];
     for (int i = 0; i < NUM_ENEMIES; i++) {
@@ -61,19 +59,21 @@ int main(void) {
         int ch = getmv(&p, xMax, yMax, '|', playwin);
         if (ch == 'x') 
             break;
+
         for (int i = 0; i < NUM_ENEMIES; i++) {
             moveEnemy(&enemies[i], xMax, yMax, playwin);
             enemyShootRandomly(&enemies[i], xMax, yMax, '|', playwin, &lastEnemyShotTimes[i]);
             displayEnemy(&enemies[i], playwin);
         }
+
         display(&p);
         wrefresh(playwin);
+        napms(100);
     }
 
-    
     getch();
     endwin();
-    
+
     return 0;
 }
 
