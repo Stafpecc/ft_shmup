@@ -1,4 +1,4 @@
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re docker-build docker-run docker-clean docker
 
 NAME = ft_shmup.a
 
@@ -32,3 +32,14 @@ fclean: clean
 	$(RM) $(NAME)
 
 re : fclean all
+
+docker-build:
+	docker build -t $(DOCKER_IMAGE):$(DOCKER_TAG) .
+
+docker-run: docker-build
+	docker run --rm -it $(DOCKER_IMAGE):$(DOCKER_TAG)
+
+docker-clean:
+	docker rmi -f $(DOCKER_IMAGE):$(DOCKER_TAG)
+
+docker: docker-run
