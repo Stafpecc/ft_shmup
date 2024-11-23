@@ -9,7 +9,7 @@ typedef struct Player {
     int xLoc;
     int yLoc;
     int xMax;
-    int Ymax;
+    int yMax;
     char character;
     WINDOW* currWindow;
 }	Player;
@@ -17,7 +17,7 @@ typedef struct Player {
 Player newplayer(int xLoc,int yLoc, int xMax, int yMax, char character, WINDOW* currWindow);
 void mvup(Player *myPlayer);
 void mvdown(Player *myPlayer);
-void voidmvleft(Player *myPlayer);
+void mvleft(Player *myPlayer);
 void mvright(Player *myPlayer);
 int getmv(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin);
 void display(Player *myPlayer);
