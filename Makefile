@@ -1,17 +1,32 @@
-DOCKER_IMAGE = ft_shmup
-DOCKER_TAG = latest
+.PHONY: all clean fclean re
 
-all: docker-run
+NAME = ft_shmup.a
 
-docker-build:
-	docker build -t $(DOCKER_IMAGE):$(DOCKER_TAG) .
+CFILES = *.c
 
-docker-run: docker-build
-	docker run --rm -it $(DOCKER_IMAGE):$(DOCKER_TAG)
+INCLUDE = ft_shmup.h
+MAKEFILE = Makefile
+
+RM = rm -f
+CC = cc
+AR = ar -rcs
+
+CFLAGS = -Wall -Wextra -Werror 
+
+OBJS = $(CFILES:.c=.o)
+
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(AR) $@ $^ -lncurses
+
+%.o: %.c $(INCLUDE) $(MAKEFILE)
+	$(CC) $(CFLAGS) -c $< -o $@ 
 
 clean:
-	docker rmi -f $(DOCKER_IMAGE):$(DOCKER_TAG)
+	$(RM) $(OBJS)
 
-re: clean all
+fclean: clean
+	$(RM) $(NAME)
 
-.PHONY: all clean docker-build docker-run
+re : fclean all

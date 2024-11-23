@@ -1,5 +1,6 @@
 #include "ft_shmup.h"
 #include <time.h>
+#include <ncurses.h>
 
 /*Create new player function*/
 Player newplayer(int xLoc,int yLoc, int xMax, int yMax, char character, WINDOW* currWindow) {

@@ -1,4 +1,5 @@
 #include "ft_shmup.h"
+#include <ncurses.h>
 
 /*Movement function*/
 void mvup(Player *myPlayer) {
