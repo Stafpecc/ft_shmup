@@ -1,6 +1,7 @@
 #include "ft_shmup.h"
 #include <time.h>
 #include <ncurses.h>
+#include <stdlib.h>
 
 /*Create new player function*/
 Player newplayer(int xLoc,int yLoc, int xMax, int yMax, char character, WINDOW* currWindow) {
@@ -34,6 +35,9 @@ int getmv(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin) {
 				lastShotTime = currentTime;
 			}
 			break;
+		case (int)'x':
+			endwin();
+            exit(0);
 		default:
 			break;
 	}
