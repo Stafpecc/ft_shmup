@@ -31,5 +31,6 @@ void shootEnemy(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin);
 void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin, clock_t *lastShotTime);
 void moveEnemy(Player *enemy, int xMax, int yMax, WINDOW *playwin);
 void displayEnemy(Player *myEnemy, WINDOW *playwin);
+bool    isEnemyAtposition (Player *enemy, int x);
 
 #endif

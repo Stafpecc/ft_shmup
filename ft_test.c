@@ -6,8 +6,18 @@
 #include <string.h>
 
 #define NUM_ENEMIES 20
+#define MAX_TIR_INTERVAL 1042
+#define MIN_TIR_INTERVAL 142
 
 void	start_display(WINDOW *playwin, int yMax, int xMax);
+
+void enemyLogic(Player *enemies, int xMax, int yMax, WINDOW *playwin, clock_t *lastEnemyShotTimes) {
+    for (int i = 0; i < NUM_ENEMIES; i++) {
+        moveEnemy(&enemies[i], xMax, yMax, playwin);
+        enemyShootRandomly(&enemies[i], xMax, yMax, '|', playwin, &lastEnemyShotTimes[i]);
+        displayEnemy(&enemies[i], playwin);
+    }
+}
 
 int main(void) {
     srand(time(NULL));
@@ -105,7 +115,7 @@ void	start_display(WINDOW *playwin, int yMax, int xMax)
 	const char *ptr = ur_name;
 	while (*p)
 	{
-		mvwaddch(playwin, yMax/2.5 - 40, xMax/2 - (center - size_char), *p);
+		mvwaddch(playwin, yMax/7, xMax/2 - (center + 0.5 - size_char), *p);
 		wrefresh(playwin);
 		p++;
 		napms(100);
@@ -113,11 +123,11 @@ void	start_display(WINDOW *playwin, int yMax, int xMax)
 	}
 	size_char = 1;
 	wattron(playwin, A_BLINK);
-	mvwaddstr(playwin, yMax/2 - 25, xMax/2 - (center- 2.5), selection);
+	mvwaddstr(playwin, yMax/3, xMax/2 - (center- 2.5), selection);
 	wattroff(playwin, A_BLINK);
 	while (*ptr)
 	{
-		mvwaddch(playwin, yMax/2 + 25, xMax/2 - (center - size_char), *ptr);
+		mvwaddch(playwin, yMax - yMax/4, xMax/2 - (center - size_char), *ptr);
 		wrefresh(playwin);
 		ptr++;
 		size_char++;
@@ -130,7 +140,7 @@ void	start_display(WINDOW *playwin, int yMax, int xMax)
 		{
 			if (i == highlight)
 				wattron(playwin, A_REVERSE);
-			mvwprintw(playwin, yMax/4 + (i), xMax/2 - (center - 2), "%s", choices[i]);
+			mvwprintw(playwin, yMax/2.5 + (i), xMax/2 - (center - 2), "%s", choices[i]);
 			wattroff(playwin, A_REVERSE);
 		}
 		choice = wgetch(playwin);
