@@ -39,7 +39,7 @@ void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playw
 
 void moveEnemy(Player *enemy, int xMax, int yMax, WINDOW *playwin) {
     mvwaddch(playwin, enemy->yLoc, enemy->xLoc, ' ');
-    int direction = (rand() % 2 == 0) ? -2 : 2;
+    int direction = (rand() % 2 == 0) ? -1 : 1;
     int newX = enemy->xLoc + direction;
     if (newX >= enemy->xLoc - 20 && newX <= enemy->xLoc + 20 && newX > 0 && newX < xMax - 1) {
         if (isEnemyAtposition(enemy, newX) == false)

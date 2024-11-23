@@ -11,14 +11,6 @@
 
 void	start_display(WINDOW *playwin, int yMax, int xMax);
 
-void enemyLogic(Player *enemies, int xMax, int yMax, WINDOW *playwin, clock_t *lastEnemyShotTimes) {
-    for (int i = 0; i < NUM_ENEMIES; i++) {
-        moveEnemy(&enemies[i], xMax, yMax, playwin);
-        enemyShootRandomly(&enemies[i], xMax, yMax, '|', playwin, &lastEnemyShotTimes[i]);
-        displayEnemy(&enemies[i], playwin);
-    }
-}
-
 int main(void) {
     srand(time(NULL));
     initscr();
@@ -70,11 +62,11 @@ int main(void) {
         if (ch == 'x') 
             break;
 
-        for (int i = 0; i < NUM_ENEMIES; i++) {
+        /*for (int i = 0; i < NUM_ENEMIES; i++) {
             moveEnemy(&enemies[i], xMax, yMax, playwin);
             enemyShootRandomly(&enemies[i], xMax, yMax, '|', playwin, &lastEnemyShotTimes[i]);
             displayEnemy(&enemies[i], playwin);
-        }
+        }*/
 
         display(&p);
         wrefresh(playwin);
