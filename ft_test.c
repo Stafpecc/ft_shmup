@@ -13,13 +13,12 @@ int main(int ac, char **av) {
 	wrefresh(playwin);
 
 	struct Player p = newplayer(1, 1, xMax, yMax, '@', playwin);
-	while (getmv(&p) != 'x') {
+	while (getmv(&p, xMax, yMax, '|', playwin) != 'x') {
 		display(&p);
 		wrefresh(playwin);
 	}
 
-	int c = getch();
-
+	getch();
 	endwin();
 	
 	return 0;

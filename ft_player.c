@@ -23,10 +23,22 @@ void mvright(Player *myPlayer) {
 }
 
 void shoot(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin) {
-	struct Player s = newplayer(myPlayer->xLoc, myPlayer->yLoc - 1, xMax, yMax, c, playwin);
+    struct Player s = newplayer(myPlayer->xLoc, myPlayer->yLoc - 1, xMax, yMax, c, playwin);
+    
+    while (s.yLoc >= 0) {
+        mvwaddch(playwin, s.yLoc, s.xLoc, s.character); 
+        wrefresh(playwin); 
+        
+        napms(100);
+        
+        mvwaddch(playwin, s.yLoc, s.xLoc, ' ');
+        
+        s.yLoc -= 1; 
+    }
 }
 
-int getmv(Player *myPlayer) {
+
+int getmv(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin) {
     int choice = wgetch(myPlayer->currWindow);
     switch(choice) {
         case (int)'w':
@@ -42,7 +54,7 @@ int getmv(Player *myPlayer) {
             mvright(myPlayer);
             break;
 		case (int)' ':
-			shoot(myPlayer, '|');
+			shoot(myPlayer, xMax, yMax, c, playwin);
 			break;
         default:
             break;
@@ -51,5 +63,6 @@ int getmv(Player *myPlayer) {
 }
 
 void display(Player *myPlayer) {
+    mvwaddch(myPlayer->currWindow, myPlayer->yLoc, myPlayer->xLoc, ' ');
     mvwaddch(myPlayer->currWindow, myPlayer->yLoc, myPlayer->xLoc, myPlayer->character);
 }

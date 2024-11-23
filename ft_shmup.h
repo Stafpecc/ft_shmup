@@ -19,8 +19,8 @@ void mvup(Player *myPlayer);
 void mvdown(Player *myPlayer);
 void voidmvleft(Player *myPlayer);
 void mvright(Player *myPlayer);
-int getmv(Player *myPlayer);
+int getmv(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin);
 void display(Player *myPlayer);
-void shoot(Player *myPlayer);
+void shoot(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin);
 
 #endif
