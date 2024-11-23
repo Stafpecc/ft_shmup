@@ -6,25 +6,19 @@
 
 #define MAX_ENEMIES 5
 #define MIN_TIR_INTERVAL 142
-#define MAX_TIR_INTERVAL 1042
+#define MAX_TIR_INTERVAL 1000
 
 /*Shoot enemy function*/
 void shootEnemy(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin) {
     Player s = newplayer(enemy->xLoc, enemy->yLoc + 1, xMax, yMax, c, playwin);
     while (s.yLoc < yMax) {
-        pthread_mutex_lock(&display_mutex);
         mvwaddch(playwin, s.yLoc, s.xLoc, s.character);
         wrefresh(playwin);
-        pthread_mutex_unlock(&display_mutex);
-
         napms(50);
-        pthread_mutex_lock(&display_mutex); 
         mvwaddch(playwin, s.yLoc, s.xLoc, ' ');
-        pthread_mutex_unlock(&display_mutex); 
         s.yLoc++;
     }
 }
-
 
 void *enemyThread(void *arg) {
     Player *enemy = (Player *)arg;

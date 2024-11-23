@@ -78,24 +78,16 @@ int main(void) {
     }
 
     while (1) {
-    int ch = getmv(&p, xMax, yMax, '|', playwin);
+        int ch = getmv(&p, xMax, yMax, '|', playwin);
+        display(&p);
 
-    pthread_mutex_lock(&display_mutex);
-    werase(playwin);
-    box(playwin, 0, 0);
+        for (int i = 0; i < NUM_ENEMIES; i++) {
+            moveEnemy(&enemies[i], xMax);
+            display(&enemies[i]);
+        }
 
-    // Afficher le joueur
-    display(&p);
-
-    // Afficher tous les ennemis
-    for (int i = 0; i < NUM_ENEMIES; i++) {
-        display(&enemies[i]);
+        wrefresh(playwin);
     }
-
-    wrefresh(playwin);
-    pthread_mutex_unlock(&display_mutex);
-}
-
 
     for (int i = 0; i < NUM_ENEMIES; i++) {
         pthread_join(enemy_threads[i], NULL);
