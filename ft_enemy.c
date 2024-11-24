@@ -4,7 +4,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define MAX_BULLETS 4200
+#define MAX_BULLETS 2147483
 
 Bullet bullets[MAX_BULLETS];
 
@@ -83,6 +83,7 @@ void shootEnemy(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin)
 
 void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin, time_t *lastShotTime, time_t *startSpecialShotTime) 
 {
+    bool specialshot = true;
     time_t currentTime = time(NULL);
     double timeElapsed = difftime(currentTime, *lastShotTime);
     double specialShotElapsed = difftime(currentTime, *startSpecialShotTime);
@@ -93,14 +94,17 @@ void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playw
                 *lastShotTime = currentTime;
                 createShot(enemy->xLoc, enemy->yLoc + 1, '|');
                 specialShotCounter++;
+                napms(1);
             }
         }
+        specialshot = true;
     } 
     else if (specialShotElapsed <= (SPECIAL_SHOT_DURATION + NORMAL_SHOT_DURATION)) {
         if (timeElapsed >= (rand() % (MAX_TIR_INTERVAL - MIN_TIR_INTERVAL) + MIN_TIR_INTERVAL) / 1000.0) {
             *lastShotTime = currentTime;
             createShot(enemy->xLoc, enemy->yLoc + 1, '|');
         }
+        specialshot = true;
     }
 
 
@@ -131,7 +135,7 @@ void fireSpecialLaser(Player *enemy, int xMax, int yMax, WINDOW *playwin) {
             mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc + 2, bullet.character);
         }
         wrefresh(playwin);
-        usleep(100000);
+        napms(2);
 
         if (i == 0 || i == 1) {
             mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc, ' ');
@@ -170,7 +174,7 @@ void moveEnemy(Player *enemy, int xMax, int yMax, WINDOW *playwin, EnemyMovement
             enemy->xLoc = newX;
     }
     mvwaddch(playwin, enemy->yLoc, enemy->xLoc, enemy->character);
-    napms(12);
+    napms(3);
 }
 
 void displayEnemy(Player *myEnemy, WINDOW *playwin) {

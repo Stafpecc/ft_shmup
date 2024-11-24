@@ -1,24 +1,27 @@
+
 #ifndef FT_SHMUP_H
 #define FT_SHMUP_H
-
+#include <math.h>
 #include <ncurses.h>
 #include <stdint.h>
 #include <time.h>
 #include <string.h>
 
 extern int specialShotCounter;
-static int NUM_ENEMIES = 0;
+extern int NUM_ENEMIES;
+extern	int	currentScore;
 
-#define MAX_TIR_INTERVAL 3042
-#define MIN_TIR_INTERVAL 1042
+#define MAX_TIR_INTERVAL 442
+#define MIN_TIR_INTERVAL 142
 
-#define SPE_MAX_TIR_INTERVAL 5042
-#define SPE_MIN_TIR_INTERVAL 442
+#define SPE_MAX_TIR_INTERVAL 142
+#define SPE_MIN_TIR_INTERVAL 42
 
-#define LASER_DURATION 7
+#define LASER_DURATION yMax - 13
 
 #define SPECIAL_SHOT_DURATION 5
 #define NORMAL_SHOT_DURATION 40
+
 
 typedef struct Player 
 {
@@ -60,6 +63,10 @@ float check_level(WINDOW *win, int xMax, int yMax, int choice);
 Player newplayer(int xLoc,int yLoc, int xMax, int yMax, char character, WINDOW* currWindow, int alive);
 void display(Player *myPlayer);
 void shoot(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin, Player *allEnemies);
+void fireBigBall(Player *p, WINDOW *playwin, Player *enemies, int numEnemies, int xMax, int yMax);
+void firePowerfulShot(Player *p, WINDOW *playwin, int xMax, int yMax, Player *enemies, int numEnemies);
+void fireRotatingLaser(Player *p, WINDOW *playwin, int xMax, int yMax, Player *enemies, int numEnemies);
+void fireDiagonalStars(Player *p, WINDOW *playwin, int xMax, int yMax, Player *enemies, int numEnemies);
 
 /*Movement function*/
 void mvup(Player *myPlayer);
@@ -67,6 +74,7 @@ void mvdown(Player *myPlayer);
 void mvleft(Player *myPlayer);
 void mvright(Player *myPlayer);
 void getmv(Player *myPlayer, int xMax, int yMax, int choice, WINDOW *playwin, Player *allEnemies);
+
 
 /*Enemy function*/
 void shootEnemy(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin);
@@ -83,10 +91,12 @@ void    createShot(int x, int y, char c);
 void fireSpecialLaser(Player *enemy, int xMax, int yMax, WINDOW *playwin) ;
 
 
-
 /*Time function*/
 GameTimer initTimer();
-void updateGameTimer(int *seconds, int *minutes, WINDOW *scorewin, int yMax, int xMax);
+void updateGameTimer(int *seconds, int *minutes, WINDOW *scorewin, int yMax, int);
+
+/*Life and Score Function*/
 void init_score(WINDOW *scorewin, int yMax, int xMax);
 
 #endif
+

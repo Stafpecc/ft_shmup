@@ -6,7 +6,6 @@
 #include <string.h>
 
 static clock_t lastUpdate = 0;
-static	int	currentScore = 0;
 GameTimer initTimer() 
 {
     GameTimer timer;
@@ -43,11 +42,11 @@ void updateGameTimer(int *seconds, int *minutes, WINDOW *scorewin, int yMax, int
 
 void init_score(WINDOW *scorewin, int yMax, int xMax)
 {
-	char life_point[] = "++++++++++";
+	char life_point[] = "++++";
 	// mvwprintw(scorewin, yMax/18 - 3, xMax - 12 - (int)strlen(life_point), "%s", "Life Point :");	
 	// mvwprintw(scorewin, yMax/18 - 2, xMax - 12 -(int)strlen(life_point), "%s", life_point);
     mvwprintw(scorewin, yMax/18 - 3, xMax - 12 - (int)strlen("Life Point : 10 "), "%s", "Life Point :");	
-	mvwprintw(scorewin, yMax/18 - 3, xMax - 12 - 3, "%d", 10);
+	mvwprintw(scorewin, yMax/18 - 3, xMax - 12 - 3, "%d", 4);
     mvwprintw(scorewin, yMax/18 - 2, xMax - 12 - (int)strlen(life_point), "%s", life_point);
 	wrefresh(scorewin);
 }
