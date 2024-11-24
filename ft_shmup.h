@@ -1,10 +1,13 @@
-
 #ifndef FT_SHMUP_H
 #define FT_SHMUP_H
-#include <math.h>
+
 #include <ncurses.h>
 #include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
+#include <math.h>
 #include <time.h>
+#include <unistd.h>
 #include <string.h>
 
 extern int specialShotCounter;
@@ -21,7 +24,6 @@ extern	int	currentScore;
 
 #define SPECIAL_SHOT_DURATION 5
 #define NORMAL_SHOT_DURATION 40
-
 
 typedef struct Player 
 {
@@ -55,9 +57,15 @@ typedef struct GameTimer {
     int seconds;
 } GameTimer;
 
+typedef struct Asteroid {
+    int xLoc;
+    int yLoc;
+    char character;
+} Asteroid;
+
 /*Menu*/
 int	start_display(WINDOW *playwin, int yMax, int xMax);
-float check_level(WINDOW *win, int xMax, int yMax, int choice);
+void check_level(WINDOW *win, int xMax, int yMax, int choice);
 
 /*Player function*/
 Player newplayer(int xLoc,int yLoc, int xMax, int yMax, char character, WINDOW* currWindow, int alive);
@@ -69,26 +77,25 @@ void fireRotatingLaser(Player *p, WINDOW *playwin, int xMax, int yMax, Player *e
 void fireDiagonalStars(Player *p, WINDOW *playwin, int xMax, int yMax, Player *enemies, int numEnemies);
 
 /*Movement function*/
-void mvup(Player *myPlayer);
-void mvdown(Player *myPlayer);
-void mvleft(Player *myPlayer);
-void mvright(Player *myPlayer);
+void mvup(Player *myPlayer, Player *allEnemies, WINDOW *playwin);
+void mvdown(Player *myPlayer, Player *allEnemies, WINDOW *playwin);
+void mvleft(Player *myPlayer, Player *allEnemies, WINDOW *playwin);
+void mvright(Player *myPlayer, Player *allEnemies, WINDOW *playwin);
 void getmv(Player *myPlayer, int xMax, int yMax, int choice, WINDOW *playwin, Player *allEnemies);
 
 
 /*Enemy function*/
-void shootEnemy(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin);
-void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin, time_t *lastShotTime, time_t *startSpecialShotTime);
-void moveEnemy(Player *enemy, int xMax, int yMax, WINDOW *playwin, EnemyMovement *movement);
+void enemyShootRandomly(Player *enemy, time_t *lastShotTime, time_t *startSpecialShotTime);
+void moveEnemy(Player *enemy, int xMax, WINDOW *playwin);
 void displayEnemy(Player *myEnemy, WINDOW *playwin);
 bool    isEnemyAtposition (Player *enemy, int x);
 int    updateBullets(WINDOW *playwin, int yMax, int xMax, int life, WINDOW *scorewin, Player player);
 void    createShot(int x, int y, char c);
 void removeEnemy(WINDOW *playwin, int x, int y, Player *allEnemies);
-int isEnemyonBullet(WINDOW *playwin, int x, int y, Player *enemies);
-void startSpecialShotForEnemies(Player *enemies, int numEnemies, time_t *startSpecialShotTime);
+int isEnemyonBullet(int x, int y, Player *enemies);
+void startSpecialShotForEnemies(int numEnemies, time_t *startSpecialShotTime);
 void    createShot(int x, int y, char c);
-void fireSpecialLaser(Player *enemy, int xMax, int yMax, WINDOW *playwin) ;
+void asteroid(int xMax, int yMax, WINDOW *playwin) ;
 
 
 /*Time function*/
@@ -97,6 +104,9 @@ void updateGameTimer(int *seconds, int *minutes, WINDOW *scorewin, int yMax, int
 
 /*Life and Score Function*/
 void init_score(WINDOW *scorewin, int yMax, int xMax);
+void end(WINDOW *playwin);
+
+
 
 #endif
 

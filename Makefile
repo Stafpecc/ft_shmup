@@ -1,8 +1,16 @@
 .PHONY: all clean fclean re docker-build docker-run docker-clean docker
 
-NAME = ft_shmup.a
+NAME = ft_shmup
 
-CFILES = *.c
+CFILES = main.c \
+		ft_asteroid.c \
+		ft_bullet.c \
+		ft_enemy.c \
+		ft_move.c \
+		ft_player.c \
+		ft_timer.c \
+		ft_menu.c \
+		ft_power.c
 
 INCLUDE = ft_shmup.h
 MAKEFILE = Makefile
@@ -20,7 +28,7 @@ DOCKER_TAG = latest
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(AR) $@ $^ -lncurses
+	$(CC) -o $@ $^ -lncurses -lm
 
 %.o: %.c $(INCLUDE) $(MAKEFILE)
 	$(CC) $(CFLAGS) -c $< -o $@ 

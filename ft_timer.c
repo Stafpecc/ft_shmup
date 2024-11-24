@@ -18,7 +18,6 @@ GameTimer initTimer()
 void updateGameTimer(int *seconds, int *minutes, WINDOW *scorewin, int yMax, int xMax) 
 {
     clock_t currentTime = time(NULL);
-    double elapsedSeconds = (double)(currentTime - lastUpdate) / CLOCKS_PER_SEC;
 
     if (currentTime > lastUpdate) 
 	{ 
@@ -43,10 +42,19 @@ void updateGameTimer(int *seconds, int *minutes, WINDOW *scorewin, int yMax, int
 void init_score(WINDOW *scorewin, int yMax, int xMax)
 {
 	char life_point[] = "++++";
-	// mvwprintw(scorewin, yMax/18 - 3, xMax - 12 - (int)strlen(life_point), "%s", "Life Point :");	
-	// mvwprintw(scorewin, yMax/18 - 2, xMax - 12 -(int)strlen(life_point), "%s", life_point);
     mvwprintw(scorewin, yMax/18 - 3, xMax - 12 - (int)strlen("Life Point : 10 "), "%s", "Life Point :");	
 	mvwprintw(scorewin, yMax/18 - 3, xMax - 12 - 3, "%d", 4);
     mvwprintw(scorewin, yMax/18 - 2, xMax - 12 - (int)strlen(life_point), "%s", life_point);
 	wrefresh(scorewin);
+}
+
+void end(WINDOW *playwin)
+{
+            wclear(playwin);
+			wrefresh(playwin);
+			printw("......RIP....  Score : %d", currentScore);
+			refresh();
+			napms(1500);
+			endwin();
+			exit (1);
 }

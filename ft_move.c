@@ -1,26 +1,36 @@
 #include "ft_shmup.h"
+
 #include <ncurses.h>
 #include <stdlib.h>
+#include <time.h>
 
 /*Movement function*/
-void mvup(Player *myPlayer) {
+void mvup(Player *myPlayer, Player *allEnemies, WINDOW *playwin) {
     if (myPlayer->yLoc > 2)
-        myPlayer->yLoc -= 2;
+        myPlayer->yLoc -= 1;
+    if (myPlayer->yLoc == allEnemies->yLoc || myPlayer->xLoc == allEnemies->xLoc)
+            end(playwin);
 }
 
-void mvdown(Player *myPlayer) {
+void mvdown(Player *myPlayer, Player *allEnemies, WINDOW *playwin) {
     if (myPlayer->yLoc < myPlayer->yMax - 14)
-        myPlayer->yLoc += 2;
+        myPlayer->yLoc += 1;
+    if (myPlayer->yLoc == allEnemies->yLoc || myPlayer->xLoc == allEnemies->xLoc)
+        end(playwin);
 }
 
-void mvleft(Player *myPlayer) {
+void mvleft(Player *myPlayer, Player *allEnemies, WINDOW *playwin) {
     if (myPlayer->xLoc > 2)
-        myPlayer->xLoc -= 2;
+        myPlayer->xLoc -= 1;
+    if (myPlayer->yLoc == allEnemies->yLoc || myPlayer->xLoc == allEnemies->xLoc)
+            end(playwin);
 }
 
-void mvright(Player *myPlayer) {
+void mvright(Player *myPlayer, Player *allEnemies, WINDOW *playwin) {
     if (myPlayer->xLoc < myPlayer->xMax - 15)
-        myPlayer->xLoc += 2;
+        myPlayer->xLoc += 1;
+    if (myPlayer->yLoc == allEnemies->yLoc || myPlayer->xLoc == allEnemies->xLoc)
+            end(playwin);    
 }
 
 /*Movement player input function*/
@@ -36,22 +46,21 @@ void getmv(Player *myPlayer, int xMax, int yMax, int choice, WINDOW *playwin, Pl
     time_t currentFireTime = time(NULL);
     time_t currentTime = time(NULL);
     time_t currentBallTime = time(NULL);
-    char c = '|';
     if (choice != ' ' && choice != 'x')
         mvwaddch(playwin, myPlayer->yLoc, myPlayer->xLoc, ' ');
 
     switch (choice) {
         case (int)'w':
-            mvup(myPlayer);
+            mvup(myPlayer, allEnemies, playwin);
             break;
         case (int)'s':
-            mvdown(myPlayer);
+            mvdown(myPlayer, allEnemies, playwin);
             break;
         case (int)'a':
-            mvleft(myPlayer);
+            mvleft(myPlayer, allEnemies, playwin);
             break;
         case (int)'d':
-            mvright(myPlayer);
+            mvright(myPlayer, allEnemies, playwin);
             break;
         case (int)'g':
             if (difftime(currentBallTime, lastBallTime) >= 5) {
