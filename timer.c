@@ -6,7 +6,7 @@
 #include <string.h>
 
 static clock_t lastUpdate = 0;
-
+static	int	currentScore = 0;
 GameTimer initTimer() 
 {
     GameTimer timer;
@@ -16,22 +16,38 @@ GameTimer initTimer()
     return timer;
 }
 
-void updateGameTimer(int *seconds, int *minutes, WINDOW *scorewin, int yMax) 
+void updateGameTimer(int *seconds, int *minutes, WINDOW *scorewin, int yMax, int xMax) 
 {
     clock_t currentTime = time(NULL);
     double elapsedSeconds = (double)(currentTime - lastUpdate) / CLOCKS_PER_SEC;
 
-   if (currentTime > lastUpdate) 
+    if (currentTime > lastUpdate) 
 	{ 
         (*seconds)++;
         if (*seconds >= 60) 
 		{
             *minutes += 1;
             *seconds = 0;
+			currentScore += 4200;
         }
+		currentScore += 42;
         lastUpdate = currentTime;
+		mvwprintw(scorewin, yMax/18 - 3, xMax/2 - 10, "%s", "Score :");
+		mvwprintw(scorewin, yMax/18 - 2, xMax/2 - 10, "%010d", currentScore);
+		wrefresh(scorewin);
 		mvwprintw(scorewin, yMax/18 - 3, 1, "%s", "Time :");
         mvwprintw(scorewin, yMax/18 - 2, 1, "%02d:%02d", *minutes, *seconds);
         wrefresh(scorewin);
   }
+}
+
+void init_score(WINDOW *scorewin, int yMax, int xMax)
+{
+	char life_point[] = "++++++++++";
+	// mvwprintw(scorewin, yMax/18 - 3, xMax - 12 - (int)strlen(life_point), "%s", "Life Point :");	
+	// mvwprintw(scorewin, yMax/18 - 2, xMax - 12 -(int)strlen(life_point), "%s", life_point);
+    mvwprintw(scorewin, yMax/18 - 3, xMax - 12 - (int)strlen("Life Point : 10 "), "%s", "Life Point :");	
+	mvwprintw(scorewin, yMax/18 - 3, xMax - 12 - 3, "%d", 10);
+    mvwprintw(scorewin, yMax/18 - 2, xMax - 12 - (int)strlen(life_point), "%s", life_point);
+	wrefresh(scorewin);
 }

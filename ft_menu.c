@@ -1,7 +1,6 @@
 #include "ft_shmup.h"
-#include <string.h>
 
-void	start_display(WINDOW *playwin, int yMax, int xMax)
+int	start_display(WINDOW *playwin, int yMax, int xMax)
 {
 	curs_set(0);
 	char	title[] = "@robase -- Versus -- Y";
@@ -83,7 +82,54 @@ void	start_display(WINDOW *playwin, int yMax, int xMax)
 			break;
 	}
 	clear();
-	refresh();
+	wrefresh(playwin);
 	wattroff(playwin, A_BOLD);
 	refresh();
+	return (highlight);
+}
+
+float check_level(WINDOW *win, int xMax, int yMax, int choice)
+{
+	float speed = 0;
+	char Ticasali[] = "You selected Ticasali, Hmm good luck";
+	if (choice == 1)
+	{
+		mvwprintw(win, yMax/3, xMax/2 - (int)strlen("Easy Mode"), "%s", "Easy Mode");
+		speed = 1;
+		NUM_ENEMIES = 10;
+	}
+	else if (choice == 3)
+	{
+		mvwprintw(win, yMax/3, xMax/2 - (int)strlen("Medium Mode"), "%s", "Medium Mode");
+		speed = 1;
+		NUM_ENEMIES = 20;
+	}
+	else if (choice == 5)
+	{
+		mvwprintw(win, yMax/3, xMax/2 - (int)strlen("Hard Mode"), "%s", "Hard Mode");
+		speed = 0.5;
+		NUM_ENEMIES = 30;
+	}
+	else if (choice == 7)
+	{
+		mvwprintw(win, yMax/3, xMax/2 - (int)strlen(Ticasali), "%s", Ticasali);
+		speed = 0;
+		NUM_ENEMIES = 50;
+	}
+    wrefresh(win);
+	int i = 10;
+	mvwprintw(win, yMax/2, xMax/2 - 2, "%d", i);
+	wrefresh(win);
+	mvwprintw(win, yMax/2, xMax/2 - 2	, "%s", "   ");
+	i--;
+	while (i > 0)
+	{
+		mvwprintw(win, yMax/2, xMax/2 - 1, "%d", i);
+		i--;
+		if (i == 0)
+			mvwprintw(win, yMax/2, xMax/2 - strlen("Go !"), "%s", "Go !");
+		wrefresh(win);
+		napms(500);
+	}
+	return (speed);
 }

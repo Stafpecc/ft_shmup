@@ -4,17 +4,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define MAX_TIR_INTERVAL 3042
-#define MIN_TIR_INTERVAL 1042
-
-#define SPE_MAX_TIR_INTERVAL 5042
-#define SPE_MIN_TIR_INTERVAL 442
-
-#define MAX_BULLETS 2000
-#define LASER_DURATION 7
-
-#define SPECIAL_SHOT_DURATION 5
-#define NORMAL_SHOT_DURATION 40
+#define MAX_BULLETS 4200
 
 Bullet bullets[MAX_BULLETS];
 
@@ -41,20 +31,36 @@ void    createShot(int x, int y, char c)
     }
 }
 
-void    updateBullets(WINDOW *playwin, int yMax)
+int    updateBullets(WINDOW *playwin, int yMax, int xMax, int life, WINDOW *scorewin, Player player)
 {
     for (int i = 0; i < MAX_BULLETS; i++)
     {
         if (bullets[i].active)
         {
+            if (bullets[i].yLoc == player.yLoc && bullets[i].xLoc == player.xLoc)
+            {
+                life--;
+                  if (life == 0)
+                    return (0);
+                mvwprintw(scorewin, yMax/18 - 2, xMax - 13 - life, "%s", "#");
+                mvwprintw(scorewin, yMax/18 - 3, xMax - 12 - 3, " %01d", life);
+                wrefresh(scorewin);
+                bullets[i].yLoc = ' ';
+                bullets[i].xLoc = ' ';
+                bullets[i].active = false;
+                bullets->xLoc = 0;
+                bullets->yLoc = 0;
+            }
+        }     
             mvwaddch(playwin, bullets[i].yLoc, bullets[i].xLoc, ' ');
             bullets[i].yLoc++;
             if (bullets[i].yLoc >= yMax)
                 bullets[i].active = false;
             else
                 mvwaddch(playwin, bullets[i].yLoc, bullets[i].xLoc, bullets[i].character);
-        }
     }
+
+    return (life);
 }
 
 void shootEnemy(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin) 
