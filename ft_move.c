@@ -1,5 +1,6 @@
 #include "ft_shmup.h"
 #include <ncurses.h>
+#include <stdlib.h>
 
 /*Movement function*/
 void mvup(Player *myPlayer) {
@@ -22,15 +23,43 @@ void mvright(Player *myPlayer) {
         myPlayer->xLoc += 2;
 }
 
+/*Movement player input function*/
+void getmv(Player *myPlayer, int xMax, int yMax, int choice, WINDOW *playwin, Player *allEnemies) {
+    flushinp();
 
-/*Shooting function*/
-void shoot(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin) {
-	Player s = newplayer(myPlayer->xLoc, myPlayer->yLoc - 1, xMax, yMax, c, playwin);
-	while (s.yLoc >= 0) {
-		mvwaddch(playwin, s.yLoc, s.xLoc, s.character);
-		wrefresh(playwin);
-		napms(20);
-		mvwaddch(playwin, s.yLoc, s.xLoc, ' ');
-		s.yLoc--;
-	}
+    static time_t lastShotTime = 0;
+    time_t currentTime = time(NULL);
+    char c = '|';
+
+    if (choice != ' ' && choice != 'x')
+        mvwaddch(playwin, myPlayer->yLoc, myPlayer->xLoc, ' '); 
+
+    switch (choice) {
+        case (int)'w':
+            mvup(myPlayer);
+            break;
+        case (int)'s':
+            mvdown(myPlayer);
+            break;
+        case (int)'a':
+            mvleft(myPlayer);
+            break;
+        case (int)'d':
+            mvright(myPlayer);
+            break;
+        case (int)' ':
+            if (difftime(currentTime, lastShotTime) >= 1.5) {
+                shoot(myPlayer, xMax, yMax, c, playwin, allEnemies);
+                lastShotTime = currentTime;
+            }
+            break;
+        case (int)'x':
+            endwin();
+            exit(0);
+        default:
+            break;
+    }
+
+    display(myPlayer);
 }
+
