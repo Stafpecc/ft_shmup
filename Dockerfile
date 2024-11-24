@@ -1,5 +1,5 @@
 FROM gcc:latest
-RUN apt-get update && apt-get install -y libncurses5-dev libncursesw5-dev
+RUN apt-get update && apt-get install -y libncurses6-dev libncursesw6-dev
 WORKDIR /app
 COPY . .
 RUN gcc -o ft_shmup *.c -lncurses

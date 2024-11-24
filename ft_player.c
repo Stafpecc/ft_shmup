@@ -24,13 +24,13 @@ int getmv(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin) {
 			mvup(myPlayer);
 			break;
 		case (int)'s':
-			mvdown(myPlayer, yMax);
+			mvdown(myPlayer);
 			break;
 		case (int)'a':
 			mvleft(myPlayer);
 			break;
 		case (int)'d':
-			mvright(myPlayer, xMax);
+			mvright(myPlayer);
 			break;
 		case (int)' ':
 			if (difftime(currentTime, lastShotTime) >= 1/5) {
@@ -44,7 +44,6 @@ int getmv(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin) {
 		default:
 			break;
 	}
-	validatePosition(myPlayer, xMax, yMax);
 	display(myPlayer);
 	return choice;
 }

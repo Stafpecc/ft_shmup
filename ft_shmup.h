@@ -20,16 +20,15 @@ void display(Player *myPlayer);
 
 /*Movement function*/
 void mvup(Player *myPlayer);
-void mvdown(Player *myPlayer, int yMax);
+void mvdown(Player *myPlayer);
 void mvleft(Player *myPlayer);
-void mvright(Player *myPlayer, int xMax);
+void mvright(Player *myPlayer);
 int getmv(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin);
 void shoot(Player *myPlayer, int xMax, int yMax, char c, WINDOW *playwin);
-void validatePosition(Player *myPlayer, int xMax, int yMax);
 
 /*Enemy function*/
 void shootEnemy(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin);
-void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin, time_t *lastShotTime);
+void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin, clock_t *lastShotTime);
 void moveEnemy(Player *enemy, int xMax, int yMax, WINDOW *playwin);
 void displayEnemy(Player *myEnemy, WINDOW *playwin);
 bool    isEnemyAtposition (Player *enemy, int x);
