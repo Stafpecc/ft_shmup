@@ -4,9 +4,17 @@
 #include <time.h>
 #include <unistd.h>
 
-#define MAX_TIR_INTERVAL 542
-#define MIN_TIR_INTERVAL 142
-#define MAX_BULLETS 50
+#define MAX_TIR_INTERVAL 3042
+#define MIN_TIR_INTERVAL 1042
+
+#define SPE_MAX_TIR_INTERVAL 5042
+#define SPE_MIN_TIR_INTERVAL 442
+
+#define MAX_BULLETS 2000
+#define LASER_DURATION 7
+
+#define SPECIAL_SHOT_DURATION 5
+#define NORMAL_SHOT_DURATION 40
 
 Bullet bullets[MAX_BULLETS];
 
@@ -54,25 +62,93 @@ void shootEnemy(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin)
     clock_t currentTime = clock();
     double timeSinceLastShot = (double)clock() / CLOCKS_PER_SEC;
     Player s = newplayer(enemy->xLoc, enemy->yLoc + 1, xMax, yMax, c, playwin, 1);
+    
     if (timeSinceLastShot >= 0.5)
-   {
+    {
         while (s.yLoc < yMax) {
-         mvwaddch(playwin, s.yLoc, s.xLoc, s.character);
+            mvwaddch(playwin, s.yLoc, s.xLoc, s.character);
             wrefresh(playwin);
             mvwaddch(playwin, s.yLoc, s.xLoc, ' ');
             s.yLoc++;
-    }
+        }
     }
 }
 
-void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin, time_t *lastShotTime) 
+
+void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin, time_t *lastShotTime, time_t *startSpecialShotTime) 
 {
     time_t currentTime = time(NULL);
     double timeElapsed = difftime(currentTime, *lastShotTime);
-    if (timeElapsed >= (rand() % (MAX_TIR_INTERVAL - MIN_TIR_INTERVAL) + MIN_TIR_INTERVAL) / 100.0) 
-    {
-        *lastShotTime = currentTime;
-        createShot(enemy->xLoc, enemy->yLoc + 1, '|');
+    double specialShotElapsed = difftime(currentTime, *startSpecialShotTime);
+
+    if (specialShotElapsed <= SPECIAL_SHOT_DURATION) {
+        if (specialShotCounter < 2) {
+            if (timeElapsed >= (rand() % (SPE_MAX_TIR_INTERVAL - SPE_MIN_TIR_INTERVAL) + SPE_MIN_TIR_INTERVAL) / 1000.0) {
+                *lastShotTime = currentTime;
+                createShot(enemy->xLoc, enemy->yLoc + 1, '|');
+                specialShotCounter++;
+            }
+        }
+    } 
+    else if (specialShotElapsed <= (SPECIAL_SHOT_DURATION + NORMAL_SHOT_DURATION)) {
+        if (timeElapsed >= (rand() % (MAX_TIR_INTERVAL - MIN_TIR_INTERVAL) + MIN_TIR_INTERVAL) / 1000.0) {
+            *lastShotTime = currentTime;
+            createShot(enemy->xLoc, enemy->yLoc + 1, '|');
+        }
+    }
+
+
+    if (specialShotElapsed >= (SPECIAL_SHOT_DURATION + NORMAL_SHOT_DURATION)) {
+        *startSpecialShotTime = currentTime;
+        specialShotCounter = 0;
+    }
+}
+
+void fireSpecialLaser(Player *enemy, int xMax, int yMax, WINDOW *playwin) {
+    Bullet bullet;
+    bullet.xLoc = enemy->xLoc;
+    bullet.yLoc = enemy->yLoc + 1;
+    bullet.character = '#';
+
+    for (int i = 0; i < LASER_DURATION; i++) {
+        if (i == 0 || i == 1) {
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc, bullet.character);
+        } else if (i == 2 || i == 3) {
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc - 1, bullet.character);
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc, bullet.character);
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc + 1, bullet.character);
+        } else {
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc - 2, bullet.character);
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc - 1, bullet.character);
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc, bullet.character);
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc + 1, bullet.character);
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc + 2, bullet.character);
+        }
+        wrefresh(playwin);
+        usleep(100000);
+
+        if (i == 0 || i == 1) {
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc, ' ');
+        } else if (i == 2 || i == 3) {
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc - 1, ' ');
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc, ' ');
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc + 1, ' ');
+        } else {
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc - 2, ' ');
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc - 1, ' ');
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc, ' ');
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc + 1, ' ');
+            mvwaddch(playwin, bullet.yLoc + i, bullet.xLoc + 2, ' ');
+        }
+        wrefresh(playwin);
+    }
+}
+
+
+void startSpecialShotForEnemies(Player *enemies, int numEnemies, time_t *startSpecialShotTimes)
+{
+    for (int i = 0; i < numEnemies; i++) {
+        startSpecialShotTimes[i] = time(NULL);
     }
 }
 
@@ -88,7 +164,7 @@ void moveEnemy(Player *enemy, int xMax, int yMax, WINDOW *playwin, EnemyMovement
             enemy->xLoc = newX;
     }
     mvwaddch(playwin, enemy->yLoc, enemy->xLoc, enemy->character);
-    napms(5);
+    napms(12);
 }
 
 void displayEnemy(Player *myEnemy, WINDOW *playwin) {
@@ -105,24 +181,23 @@ bool    isEnemyAtposition (Player *enemy, int x)
     return (false);
 }
 
-int isEnemyonBullet(WINDOW *playwin, int x, int y) 
-{
-    return (mvwinch(playwin, y, x) == 'Y');
-}
-
-void removeEnemy(WINDOW *playwin, int x, int y, Player *myEnemy) 
-{
-    mvwaddch(playwin, y, x, ' ');
-    myEnemy->alive = 0;
-    wrefresh(playwin);
-}
-
-void enemyLogic(Player *enemies, int xMax, int yMax, WINDOW *playwin, clock_t *lastEnemyShotTimes) 
-{
-	EnemyMovement	enemyMovements[NUM_ENEMIES];
+int isEnemyonBullet(WINDOW *playwin, int x, int y, Player *enemies) {
     for (int i = 0; i < NUM_ENEMIES; i++) {
-        moveEnemy(&enemies[i], xMax, yMax, playwin, &enemyMovements[i]);
-        enemyShootRandomly(&enemies[i], xMax, yMax, '|', playwin, &lastEnemyShotTimes[i]);
-        displayEnemy(&enemies[i], playwin);
+        if (enemies[i].xLoc == x && enemies[i].yLoc == y && enemies[i].alive == 1) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void removeEnemy(WINDOW *playwin, int x, int y, Player *enemies) {
+    for (int i = 0; i < NUM_ENEMIES; i++) {
+        if (enemies[i].xLoc == x && enemies[i].yLoc == y && enemies[i].alive == 1) {
+            mvwaddch(playwin, y, x, ' '); 
+            enemies[i].alive = 0;
+            NUM_ENEMIES--;
+            wrefresh(playwin);
+            break;
+        }
     }
 }

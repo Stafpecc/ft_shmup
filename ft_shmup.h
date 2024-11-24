@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <time.h>
 
+extern int specialShotCounter;
 static int NUM_ENEMIES = 20;
 
 typedef struct Player 
@@ -56,15 +57,19 @@ void getmv(Player *myPlayer, int xMax, int yMax, int choice, WINDOW *playwin, Pl
 
 /*Enemy function*/
 void shootEnemy(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin);
-void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin, time_t *lastShotTime);
+void enemyShootRandomly(Player *enemy, int xMax, int yMax, char c, WINDOW *playwin, time_t *lastShotTime, time_t *startSpecialShotTime);
 void moveEnemy(Player *enemy, int xMax, int yMax, WINDOW *playwin, EnemyMovement *movement);
 void displayEnemy(Player *myEnemy, WINDOW *playwin);
 bool    isEnemyAtposition (Player *enemy, int x);
 void    updateBullets(WINDOW *playwin, int yMax);
 void    createShot(int x, int y, char c);
-void removeEnemy(WINDOW *playwin, int x, int y, Player *myEnemy);
-int isEnemyonBullet(WINDOW *playwin, int x, int y);
-void enemyLogic(Player *enemies, int xMax, int yMax, WINDOW *playwin, clock_t *lastEnemyShotTimes);
+void removeEnemy(WINDOW *playwin, int x, int y, Player *allEnemies);
+int isEnemyonBullet(WINDOW *playwin, int x, int y, Player *enemies);
+void startSpecialShotForEnemies(Player *enemies, int numEnemies, time_t *startSpecialShotTime);
+void    createShot(int x, int y, char c);
+void fireSpecialLaser(Player *enemy, int xMax, int yMax, WINDOW *playwin) ;
+
+
 
 /*Time function*/
 GameTimer initTimer();

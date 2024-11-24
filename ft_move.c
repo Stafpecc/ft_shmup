@@ -26,13 +26,11 @@ void mvright(Player *myPlayer) {
 /*Movement player input function*/
 void getmv(Player *myPlayer, int xMax, int yMax, int choice, WINDOW *playwin, Player *allEnemies) {
     flushinp();
-
     static time_t lastShotTime = 0;
     time_t currentTime = time(NULL);
     char c = '|';
-
     if (choice != ' ' && choice != 'x')
-        mvwaddch(playwin, myPlayer->yLoc, myPlayer->xLoc, ' '); 
+        mvwaddch(playwin, myPlayer->yLoc, myPlayer->xLoc, ' ');
 
     switch (choice) {
         case (int)'w':
@@ -49,7 +47,7 @@ void getmv(Player *myPlayer, int xMax, int yMax, int choice, WINDOW *playwin, Pl
             break;
         case (int)' ':
             if (difftime(currentTime, lastShotTime) >= 1.5) {
-                shoot(myPlayer, xMax, yMax, c, playwin, allEnemies);
+                shoot(myPlayer, xMax, yMax, '|', playwin, allEnemies);
                 lastShotTime = currentTime;
             }
             break;
@@ -59,7 +57,5 @@ void getmv(Player *myPlayer, int xMax, int yMax, int choice, WINDOW *playwin, Pl
         default:
             break;
     }
-
     display(myPlayer);
 }
-
